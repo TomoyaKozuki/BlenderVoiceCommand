@@ -3,9 +3,13 @@
 
 # Installation
 
+## Requirements
+- Blender 3.x
+- Python 3.x
+- Speech recognition library (e.g. Whisper / Vosk)
 # Usage
 
 # Tools
 
 # License
-This repo is under the [MIT LISENCE].
+This repo is under the [MIT LICENSE](LICENSE).
