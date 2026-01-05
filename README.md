@@ -4,8 +4,8 @@
 # Requirements
 - blender 4.1
 - blender python 3.11.7
-- 
-## Python dependency 
+  
+## external Python module
 - pywhispercpp
 - faster whisper
 - numpy
