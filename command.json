@@ -1,0 +1,40 @@
+{
+  "日本語": {
+    "保存": {
+      "description": "データの保存処理",
+      "code": "bpy.ops.wm.save_mainfile()"
+    },
+    "削除": {
+      "description": "オブジェクトの削除",
+      "code": "bpy.ops.object.delete()"
+    },
+    "更新": {
+      "description": "データの更新処理",
+      "code": "print('データを更新しました')"
+    }
+  },
+  "English": {
+    "save": {
+      "description": "save data",
+      "code": "bpy.ops.wm.save_mainfile()"
+    },
+    "delete": {
+      "description": "delete object",
+      "code": "bpy.ops.object.delete()"
+    },
+    "update": {
+      "description": "update data",
+      "code": "print('data updated')"
+    }
+  },
+  "中文": {
+    "保存": {
+      "description": "保存数据",
+      "code": "bpy.ops.wm.save_mainfile()"
+    },
+    "删除": {
+      "description": "删除对象",
+      "code": "bpy.ops.object.delete()"
+    }
+  }
+}
