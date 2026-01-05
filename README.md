@@ -5,7 +5,7 @@
 - blender 4.1
 - blender python 3.11.7
   
-## external Python module
+### dependency
 - pywhispercpp
 - faster whisper
 - numpy
