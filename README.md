@@ -4,6 +4,7 @@
 # Requirements
 - blender 4.1
 - blender python 3.11.7
+- 
 - pywhispercpp
 - faster whisper
 - numpy
