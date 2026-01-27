@@ -79,7 +79,7 @@ class VOICE_PT_bvc_mode(Panel):
                 box.label(text="音声閾値: N/A")
                 box.label(text="使用デバイス: N/A")
             # 停止方法を表示
-            box.label(text="💡 ESCキーで停止", icon='INFO')
+            box.label(text="ESCキーで停止", icon='INFO')
         else:
             # 待機中の表示
             draw_layout.operator("voice.bvc_mode", text="音声認識開始", icon='PLAY')

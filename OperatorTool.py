@@ -138,7 +138,7 @@ class VOICE_OT_bvc_mode(Operator):
         # 信頼度チェック（pywhispercppでは信頼度情報が限定的）
         confidence = result.get("confidence", 1.0)
         if confidence < 0.5:
-            print(f"⚠️ 信頼度が低いため処理をスキップ: {confidence:.3f}")
+            print(f"信頼度が低いため処理をスキップ: {confidence:.3f}")
             return
         
         # コマンド実行処理
@@ -149,16 +149,16 @@ class VOICE_OT_bvc_mode(Operator):
             
             # 2. 組み込みコマンド
             if not executed:
-                print(f"❓ 未知のコマンド: '{text}'")
+                print(f"未知のコマンド: '{text}'")
             
             # 実行結果の報告
             if executed:
                 self.report({'INFO'}, f"✅ [{engine_name}] コマンド実行: {text}")
             else:
-                print(f"❓ [{engine_name}] 未知のコマンド: '{text}'")
+                print(f"未知のコマンド: '{text}'")
                 
         except Exception as e:
-            print(f"❌ [{engine_name}] コマンド処理エラー: {e}")
+            print(f"コマンド処理エラー: {e}")
     
     def try_json_commands(self, text, original_text, context):
         """JSONコマンドの実行を試行"""
@@ -227,10 +227,10 @@ class VOICE_OT_bvc_mode(Operator):
             print(f"Punctuation removed: -> '{processed_text}'")
             
             # JSONに登録されている言語リストを表示
-            print(f"\n📚 JSONに登録されている言語:")
+            print(f"\nJSONに登録されている言語:")
             for lang_item in command_props.language_commands:
                 print(f"  - '{lang_item.language_name}' (コマンド数: {len(lang_item.commands)})")
-            print(f"🔍 検出された言語: '{detected_language}'")
+            print(f"検出された言語: '{detected_language}'")
             
             #言語別のコマンドリストを確認
             for lang_items in command_props.language_commands:
@@ -251,15 +251,15 @@ class VOICE_OT_bvc_mode(Operator):
                         print(f"Command key after punctuation removal: '{normalized_cmd_key}'")
                         
                         if normalized_cmd_key in processed_text:
-                            print(f"✅ マッチ: '{processed_text}' -> '{cmd_item.command_description}'")
+                            print(f"マッチ: '{processed_text}' -> '{cmd_item.command_description}'")
                             # コマンドに対応する処理を実行
                             code = getattr(cmd_item, "command_code", None)
-                            print(f"📋 コード取得: {repr(code)}")
-                            print(f"📊 コードの状態: 型={type(code).__name__}, 空={code is None or code == ''}, 空白のみ={code.strip() == '' if isinstance(code, str) else 'N/A'}")
+                            print(f"コード取得: {repr(code)}")
+                            print(f"コードの状態: 型={type(code).__name__}, 空={code is None or code == ''}, 空白のみ={code.strip() == '' if isinstance(code, str) else 'N/A'}")
                             
                             if code and isinstance(code, str) and code.strip():
                                 try:
-                                    print(f"🚀 コード実行開始: {cmd_item.command_key}")
+                                    print(f"コード実行開始: {cmd_item.command_key}")
                                     # Blenderのグローバル環境を渡す
                                     exec_globals = {
                                         'bpy': bpy,
@@ -267,30 +267,30 @@ class VOICE_OT_bvc_mode(Operator):
                                     }
                                     # 必要に応じて他のモジュールも追加
                                     exec(code, exec_globals)
-                                    print(f"✅ コマンド実行成功: {cmd_item.command_description}")
+                                    print(f"コマンド実行成功: {cmd_item.command_description}")
                                     return True
                                 except RuntimeError as e:
                                     # Blender操作エラー（ファイル未保存など）もコマンドとしては認識されている
                                     error_msg = str(e)
-                                    print(f"⚠️ コマンド '{cmd_item.command_key}' 実行中にエラー: {error_msg}")
+                                    print(f"コマンド '{cmd_item.command_key}' 実行中にエラー: {error_msg}")
                                     if "Unable to save" in error_msg and "filepath" in error_msg:
-                                        print(f"💡 ヒント: ファイルを一度手動で保存してから、このコマンドを使用してください")
+                                        print(f"ヒント: ファイルを一度手動で保存してから、このコマンドを使用してください")
                                     return True  # コマンドは認識されたのでTrueを返す
                                 except Exception as e:
-                                    print(f"❌ コマンド実行エラー: {e}")
+                                    print(f"コマンド実行エラー: {e}")
                                     import traceback
                                     traceback.print_exc()
                                     return True  # コマンドは認識されたのでTrueを返す
                             else:
-                                print(f"⚠️ コードが空またはNullです。コマンドは登録されていますが実行可能なコードがありません")
+                                print(f"コードが空またはNullです。コマンドは登録されていますが実行可能なコードがありません")
                                 print(f"   コマンド名: {cmd_item.command_key}")
                                 print(f"   説明: {cmd_item.command_description}")
                                 return False
                         else:
-                            print(f"❌ JSON command mismatch: '{processed_text}' does not contain '{normalized_cmd_key}'")
+                            print(f"JSON command mismatch: '{processed_text}' does not contain '{normalized_cmd_key}'")
             return False
         except Exception as e:
-            print(f"❌ JSON コマンド処理エラー: {e}")
+            print(f"JSON コマンド処理エラー: {e}")
             return False
     
     
@@ -312,7 +312,7 @@ class VOICE_OT_bvc_mode(Operator):
         self.is_voice_active = False
         
         engine_name = "pywhispercpp" if self.use_pywhisper else "faster-whisper"
-        print(f"🧹 {engine_name}リソースクリーンアップ完了")
+        print(f"{engine_name}リソースクリーンアップ完了")
 
 ###########################################
 #   　 　　音声デバイスの探索
@@ -670,9 +670,9 @@ class VOICE_OT_save_commands(bpy.types.Operator):
         # まず同期を実行
         sync_success = sync_command_items_to_bvc_props()
         if sync_success:
-            print("✅ 編集内容を自動同期しました")
+            print("編集内容を自動同期しました")
         else:
-            print("⚠️ 同期に失敗しましたが、保存を続行します")
+            print("同期に失敗しましたが、保存を続行します")
         
         # JSON保存を実行
         if save_commands_to_json():
@@ -813,8 +813,8 @@ class VOICE_OT_execute_command_popup(bpy.types.Operator):
                         import bmesh
                         exec_globals['bmesh'] = bmesh
                     
-                    print(f"🎯 実行開始: {item.name}")
-                    print(f"📋 コード:\n{item.code}")
+                    print(f"実行開始: {item.name}")
+                    print(f"コード:\n{item.code}")
                     
                     # コードを実行
                     exec(item.code, exec_globals)
@@ -825,16 +825,16 @@ class VOICE_OT_execute_command_popup(bpy.types.Operator):
                             area.tag_redraw()
                     
                     # 成功メッセージ
-                    self.report({'INFO'}, f"✅ コマンド '{item.name}' を実行しました")
-                    print(f"✅ 実行完了: {item.name}")
+                    self.report({'INFO'}, f"コマンド '{item.name}' を実行しました")
+                    print(f"実行完了: {item.name}")
                     
                 else:
                     self.report({'WARNING'}, "実行するコードがありません")
             except Exception as e:
                 error_msg = f"実行エラー: {str(e)}"
                 self.report({'ERROR'}, error_msg)
-                print(f"❌ {error_msg}")
-                print(f"📋 エラーが発生したコード:\n{item.code}")
+                print(f"{error_msg}")
+                print(f"エラーが発生したコード:\n{item.code}")
         
         return {'FINISHED'}
 
@@ -860,36 +860,36 @@ class VOICE_OT_speech_recognition(Operator):
         selected_device = check_audio_devices()
         
         if selected_device is None:
-            self.report({'WARNING'}, "⚠️ デフォルトデバイスを試します")
+            self.report({'WARNING'}, "デフォルトデバイスを試します")
         else:
             # 選択されたデバイスをテスト
-            self.report({'INFO'}, f"🧪 選択されたデバイス {selected_device} をテスト中...")
+            self.report({'INFO'}, f"選択されたデバイス {selected_device} をテスト中...")
             if not test_audio_device(selected_device):
-                self.report({'ERROR'}, "❌ 選択されたデバイスが使用できません")
+                self.report({'ERROR'}, "選択されたデバイスが使用できません")
                 
                 # 他のデバイスも試してみる
-                self.report({'INFO'}, "🔄 他の利用可能デバイスを試しています...")
+                self.report({'INFO'}, "他の利用可能デバイスを試しています...")
                 devices = sd.query_devices()
                 input_devices = [i for i, d in enumerate(devices) if d['max_input_channels'] > 0]
                 
                 found_working_device = False
                 for device_id in input_devices:
                     if device_id != selected_device:
-                        self.report({'INFO'}, f"🧪 デバイス {device_id} ({devices[device_id]['name']}) をテスト中...")
+                        self.report({'INFO'}, f"デバイス {device_id} ({devices[device_id]['name']}) をテスト中...")
                         if test_audio_device(device_id):
                             selected_device = device_id
                             found_working_device = True
-                            self.report({'INFO'}, f"✅ デバイス {device_id} が動作しました")
+                            self.report({'INFO'}, f"デバイス {device_id} が動作しました")
                             break
                 
                 if not found_working_device:
-                    self.report({'ERROR'}, "❌ 動作する音声デバイスが見つかりませんでした")
-                    self.report({'ERROR'}, "🛠️ マイクが接続されているか確認してください")
+                    self.report({'ERROR'}, "動作する音声デバイスが見つかりませんでした")
+                    self.report({'ERROR'}, "マイクが接続されているか確認してください")
                     return {'CANCELLED'}
         
         try:
             # 音声認識部分
-            self.report({'INFO'}, "🎙️ 音声入力を開始します...")
+            self.report({'INFO'}, "音声入力を開始します...")
             with sd.InputStream(
                 callback=callback, 
                 channels=1, 
@@ -897,17 +897,17 @@ class VOICE_OT_speech_recognition(Operator):
                 device=selected_device
             ):
                 # Blender UIをブロックしないように、短時間の録音に変更
-                print("🎤 録音中... (5秒間)")
+                print("録音中... (5秒間)")
                 sd.sleep(5000)  # 5秒録音
                 recognize_from_queue()  # 定期的にキューから音声を取り出し認識
             
-            self.report({'INFO'}, "✅ 音声録音が完了しました")
+            self.report({'INFO'}, "音声録音が完了しました")
             return {'FINISHED'}
             
         except Exception as e:
-            error_msg = f"❌ 音声入力エラー: {e}"
+            error_msg = f"音声入力エラー: {e}"
             self.report({'ERROR'}, error_msg)
-            self.report({'ERROR'}, "🛠️ 対処法:")
+            self.report({'ERROR'}, "対処法:")
             self.report({'ERROR'}, "1. マイクが接続されているか確認してください")
             self.report({'ERROR'}, "2. Windowsの音声設定でマイクが有効になっているか確認してください")
             self.report({'ERROR'}, "3. 他のアプリケーションがマイクを使用していないか確認してください")
@@ -937,34 +937,33 @@ class VOICE_OT_language_check(Operator):
 
         # 押されたキーを取得
         if not self.pressed_key:
-            print("❌ 押されたキーが指定されていません")
+            print("押されたキーが指定されていません")
             return {'CANCELLED'}
         
         key = self.pressed_key
-        print(f"🖱️ 押されたチェックボックスのキー: {key}")
-
+        print(f"押されたチェックボックスのキー: {key}")
         # 押されたキーの現在の状態を確認
         check_flag = getattr(props, key, None)
 
         if check_flag is True:
             setattr(props, key, False)
-            print(f"❌ {key} をFalseに変更しました")
+            print(f"{key} をFalseに変更しました")
 
         elif check_flag is False:
             # False → True: すべてをFalseにしてから選択したもののみTrue
-            print(f"📋 排他的選択を実行: {key} のみTrueにします")
+            print(f"排他的選択を実行: {key} のみTrueにします")
             #すべてのチェックを外す
             for other_key, label in props.language_keys:
                 setattr(props, other_key, False)
-                print(f"   ❌ {other_key} → False")
+                print(f"   {other_key} → False")
             #選択したものだけTrueにする
             setattr(props, key, True)
-            print(f"   ✅ {key} → True")
+            print(f"   {key} → True")
 
         else:
             #選択したチェックボックスがTrueでもFalseでもない場合
             # None または異常値の場合
-            print(f"⚠️ {key} の状態が異常です: {check_flag}")
+            print(f"{key} の状態が異常です: {check_flag}")
             pass
         
         return {'FINISHED'}
@@ -992,14 +991,14 @@ class VOICE_OT_volume_threshold_info(Operator):
         # タイトル
         row = layout.row()
         row.alignment = 'CENTER'
-        row.label(text="🔊 ボリューム閾値の設定", icon='OUTLINER_OB_SPEAKER')
+        row.label(text="ボリューム閾値の設定", icon='OUTLINER_OB_SPEAKER')
         
         layout.separator()
         
         # 説明文
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="📋 概要:")
+        col.label(text="概要:")
         col.label(text="  音声認識を開始する最小音量レベルを設定します")
         col.label(text="  値が小さいほど小さな音でも反応します")
         
@@ -1007,7 +1006,7 @@ class VOICE_OT_volume_threshold_info(Operator):
         
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="🎚️ 推奨設定:")
+        col.label(text="推奨設定:")
         col.label(text="  • 0.1 - 0.3: 静かな環境での使用")
         col.label(text="  • 0.3 - 0.5: 標準的な環境での使用")
         col.label(text="  • 0.5 - 0.8: 騒がしい環境での使用")
@@ -1016,7 +1015,7 @@ class VOICE_OT_volume_threshold_info(Operator):
         
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="⚠️ 注意点:")
+        col.label(text="注意点:")
         col.label(text="  • 値が低すぎると雑音でも反応します")
         col.label(text="  • 値が高すぎると音声を検出できません")
         col.label(text="  • マイクの性能により適切な値が異なります")
@@ -1025,7 +1024,7 @@ class VOICE_OT_volume_threshold_info(Operator):
         
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="💡 調整方法:")
+        col.label(text="調整方法:")
         col.label(text="  1. 通常の声の大きさで話す")
         col.label(text="  2. 認識が開始される値まで調整")
         col.label(text="  3. 雑音で誤作動しない値を確認")
@@ -1067,7 +1066,7 @@ class VOICE_OT_device_info(Operator):
         # 説明文
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="⚠️ 注意点:")
+        col.label(text="注意点:")
         col.label(text="  Blenderの仕様上、録音デバイスの変更はBlender再起動後に反映されます")
         col.label(text="  そのため、デバイスを変更した場合はBlenderを再起動してください")
         
@@ -1100,7 +1099,7 @@ class VOICE_OT_command_info(Operator):
         # 説明文
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="⚠️ 注意点:")
+        col.label(text="注意点:")
         col.label(text="BVCでは、システム破壊の防止やデータ保護のため、")
         col.label(text="音声コマンドによる危険なコードの実行を制限しています")
 

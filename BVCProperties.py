@@ -132,12 +132,12 @@ def ja_checkbox_update(self, context):
     if hasattr(self, '_updating'):
         return
     
-    print("🖱️ 日本語チェックボックスが押されました")
+    print("日本語チェックボックスが押されました")
     
     if getattr(self, "JA", False):  # JAがTrueになった場合のみ
         try:
             self._updating = True
-            print("📋 排他的選択を実行: JA のみTrueにします")
+            print("排他的選択を実行: JA のみTrueにします")
             # 他をすべてFalseにする（setattr使用）
             setattr(self, "EN", False)
             setattr(self, "ZH", False)
@@ -153,12 +153,12 @@ def en_checkbox_update(self, context):
     if hasattr(self, '_updating'):
         return
     
-    print("🖱️ 英語チェックボックスが押されました")
+    print("英語チェックボックスが押されました")
     
     if getattr(self, "EN", False):  # ENがTrueになった場合のみ
         try:
             self._updating = True
-            print("📋 排他的選択を実行: EN のみTrueにします")
+            print("排他的選択を実行: EN のみTrueにします")
             setattr(self, "JA", False)
             setattr(self, "ZH", False)
             print("   ❌ JA → False")
@@ -173,12 +173,12 @@ def zh_checkbox_update(self, context):
     if hasattr(self, '_updating'):
         return
     
-    print("🖱️ 中文チェックボックスが押されました")
+    print("中文チェックボックスが押されました")
     
     if getattr(self, "ZH", False):  # ZHがTrueになった場合のみ
         try:
             self._updating = True
-            print("📋 排他的選択を実行: ZH のみTrueにします")
+            print("排他的選択を実行: ZH のみTrueにします")
             setattr(self, "JA", False)
             setattr(self, "EN", False)
             print("   ❌ JA → False")
