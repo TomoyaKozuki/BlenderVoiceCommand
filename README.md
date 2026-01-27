@@ -48,7 +48,13 @@ Blender Voice Control（BVC）は、**音声認識によって Blender を操作
   - 認識言語の選択
   - 音声コマンドの設定
 - 音声認識を開始し、音声コマンドによって Blender を操作します。
+- 
+# Documentation / Demo
 
+詳細な仕様や操作方法については、以下をご参照ください。
+
+- 📄 Blender拡張機能の説明.pdf  
+- 🎥 動作確認動画.mp4
 
 # License
 This repo is under the [MIT LICENSE](LICENSE).
