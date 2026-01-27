@@ -53,8 +53,8 @@ Blender Voice Control（BVC）は、**音声認識によって Blender を操作
 
 詳細な仕様や操作方法については、以下をご参照ください。
 
-- 📄 Blender拡張機能の説明.pdf  
-- 🎥 動作確認動画.mp4
+- 📄 [Blender拡張機能の説明.pdf](Blender拡張機能の説明.pdf)
+- 🎥 [動作確認動画.mp4](動作確認動画.mp4)
 
 # License
 This repo is under the [MIT LICENSE](LICENSE).
