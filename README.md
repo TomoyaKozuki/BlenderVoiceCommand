@@ -29,11 +29,14 @@ Blender Voice Control（BVC）は、**音声認識によって Blender を操作
 
 # Installation
 
-1. Blender を起動します。
-2. **Edit → Preferences → Add-ons** を開きます。
-3. 上部のフィルターから **Testing** を選択します。
-4. **Install…** をクリックし、`VoiceCommand.zip` を選択します。
-5. アドオン一覧に表示される  
+1. GitHub のリポジトリから **Code → Download ZIP** を選択し、  
+   `BlenderVoiceCommand-main.zip` をダウンロードします。
+2. Blender を起動します。
+3. **Edit → Preferences → Add-ons** を開きます。
+4. 上部のフィルターから **Testing** を選択します。
+5. **Install…** をクリックし、ダウンロードした  
+   `BlenderVoiceCommand-main.zip` を選択します。
+6. アドオン一覧に表示される  
    **3D View: Blender Voice Command (BVC)** にチェックを入れて有効化します。
 
 > ⚠️ Windows 環境では、Blender を **管理者権限で実行**してください。
