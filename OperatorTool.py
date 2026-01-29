@@ -40,11 +40,11 @@ class VOICE_OT_bvc_mode(Operator):
         try:
             import pywhispercpp
             pywhisper_available = True
-            print("✅ pywhispercpp が利用可能です")
+            print("pywhispercpp が利用可能です")
         except ImportError:
             pywhisper_available = False
             self.use_pywhisper = False
-            print("❌ pywhispercpp が利用できません。標準モードで実行します。")
+            print("pywhispercpp が利用できません。標準モードで実行します。")
             self.report({'WARNING'}, "pywhispercpp が利用できません。標準モードで実行します。")
         
         # 現在は標準のvoice_managerを使用
@@ -54,11 +54,11 @@ class VOICE_OT_bvc_mode(Operator):
         status_info = voice_mgr.get_status_info()
         engine_name = "pywhispercpp" if self.use_pywhisper and pywhisper_available else "faster-whisper"
         
-        print(f"🔍 使用エンジン: {engine_name}")
+        print(f"使用エンジン: {engine_name}")
         
         if not voice_mgr.is_active:
             # 音声認識開始
-            print(f"🎤 {engine_name}で音声認識を開始しようとしています...")
+            print(f"{engine_name}で音声認識を開始しようとしています...")
             
             if voice_mgr.start_recognition():
                 # タイマーを設定（0.2秒間隔でチェック）
@@ -68,15 +68,15 @@ class VOICE_OT_bvc_mode(Operator):
                 
                 self.is_voice_active = True
                 self.report({'INFO'}, f"🎤 {engine_name}音声認識開始（ESCで停止）")
-                print("✅ Modalモードに入りました")
+                print("Modalモードに入りました")
                 return {'RUNNING_MODAL'}
             else:
-                error_msg = f"❌ {engine_name}音声認識の開始に失敗しました"
+                error_msg = f"{engine_name}音声認識の開始に失敗しました"
                 self.report({'ERROR'}, error_msg)
                 return {'CANCELLED'}
         else:
             # 既にアクティブの場合は停止
-            print(f"🛑 音声認識を停止します")
+            print(f"音声認識を停止します")
             voice_mgr.stop_recognition()
             self.report({'INFO'}, f"🎤 {engine_name}音声認識を停止しました")
             
@@ -153,7 +153,7 @@ class VOICE_OT_bvc_mode(Operator):
             
             # 実行結果の報告
             if executed:
-                self.report({'INFO'}, f"✅ [{engine_name}] コマンド実行: {text}")
+                self.report({'INFO'}, f"[{engine_name}] コマンド実行: {text}")
             else:
                 print(f"未知のコマンド: '{text}'")
                 
@@ -924,7 +924,7 @@ class VOICE_OT_language_check(Operator):
     bl_options = {'REGISTER','UNDO'}
 
     """executeを別の関数から呼び出す際は、別の関数内で引数にプロパティが必要になる"""
-    # ✅ bpy.opsを通して呼び出す（引数はプロパティで渡す）
+    # bpy.opsを通して呼び出す（引数はプロパティで渡す）
     # 押されたチェックボックスのキーを受け取るプロパティ
     pressed_key: bpy.props.StringProperty(
         name="押されたキー",

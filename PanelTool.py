@@ -39,7 +39,7 @@ class VOICE_PT_bvc_mode(Panel):
             # 録音中の表示
             row = draw_layout.row()
             row.alert = True  # 赤色で強調
-            row.operator("voice.bvc_mode", text="🎤 録音中... (クリックで停止)", icon='REC')
+            row.operator("voice.bvc_mode", text="録音中... (クリックで停止)", icon='REC')
             
             # 状態詳細を表示
             box = draw_layout.box()

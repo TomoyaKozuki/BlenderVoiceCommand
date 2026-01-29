@@ -40,7 +40,7 @@ except ImportError:
     except ImportError:
         model = None
         WHISPER_TYPE = None
-        print("⚠️ 音声認識ライブラリが見つかりません")
+        print("音声認識ライブラリが見つかりません")
 
 try:
     import pywhispercpp
@@ -88,14 +88,13 @@ def get_active_language():
                     default_value: キーが見つからない場合に返すデフォルト値
                     """
                     language_code = DISPLAY_TO_CODE.get(name, name.lower())
-                    #print(f"🌐 選択言語: {name} → {language_code}")
                     return language_code
         
-        print(f"⚠️ デフォルト言語 '{DEFAULT_LANGUAGE}' を使用")
+        print(f"デフォルト言語 '{DEFAULT_LANGUAGE}' を使用")
         return DEFAULT_LANGUAGE
         
     except Exception as e:
-        print(f"❌ 言語取得エラー: {e}")
+        print(f"言語取得エラー: {e}")
         return DEFAULT_LANGUAGE
 
 def get_whisper_language_setting():
@@ -106,13 +105,13 @@ def get_whisper_language_setting():
         if active_language:
             # 事前計算済み辞書使用（超高速）
             whisper_code = WHISPER_CODE_MAP.get(active_language, active_language)
-            print(f"🎤 Whisper用言語設定: {whisper_code}")
+            print(f"Whisper用言語設定: {whisper_code}")
             return whisper_code
         else:
             return None
             
     except Exception as e:
-        print(f"❌ Whisper言語設定エラー: {e}")
+        print(f"Whisper言語設定エラー: {e}")
         return None
     
 ###########################################
@@ -150,7 +149,7 @@ class VoiceRecognitionManager:
             return True
             
         if model is None:
-            print("⚠️ 音声認識モデルが利用できません")
+            print("音声認識モデルが利用できません")
             self.status_message = "モデル利用不可"
             return False
         
@@ -160,7 +159,7 @@ class VoiceRecognitionManager:
             device_id = check_audio_devices()
         
         if device_id is None:
-            print("❌ 利用可能な音声デバイスがありません")
+            print("利用可能な音声デバイスがありません")
             self.status_message = "デバイスなし"
             return False
         
@@ -173,10 +172,10 @@ class VoiceRecognitionManager:
             self.start_time = time.time()
             self.status_message = "録音中"
             
-            print(f"🎤 音声認識開始 (デバイス: {device_id})")
+            print(f"音声認識開始 (デバイス: {device_id})")
             return True
         except Exception as e:
-            print(f"❌ 音声認識開始エラー: {e}")
+            print(f"音声認識開始エラー: {e}")
             self.status_message = f"開始エラー: {str(e)}"
             return False
     
@@ -201,7 +200,7 @@ class VoiceRecognitionManager:
                 break
         
         self.status_message = "待機中"
-        print("🛑 音声認識停止")
+        print("音声認識停止")
     
     def get_latest_result(self):
         """最新の認識結果を取得"""
@@ -240,7 +239,7 @@ class AudioProcessor(threading.Thread):
     def audio_callback(self, indata, frames, time, status):
         """音声データのコールバック"""
         if status:
-            print(f"⚠️ オーディオステータス: {status}")
+            print(f"オーディオステータス: {status}")
         if self.is_running:
             if hasattr(bpy.context.scene, 'bvc_device_props'):
                 props = bpy.context.scene.bvc_device_props
@@ -271,14 +270,14 @@ class AudioProcessor(threading.Thread):
                 device=self.device_id,
                 blocksize=1024
             ):
-                print(f"🎙️ 音声入力開始 (デバイス: {self.device_id} - {devices[self.device_id]['name']})")
+                print(f"音声入力開始 (デバイス: {self.device_id} - {devices[self.device_id]['name']})")
                 
                 while self.is_running:
                     # 音声データを蓄積してから認識
                     audio_chunks = []
                     chunk_count = 0
                     
-                    print("🔊 音声収集中...", end="", flush=True)
+                    print("音声収集中...", end="", flush=True)
                     
                     # 約2秒分のデータを蓄積
                     while chunk_count < 32 and self.is_running:  # 32 chunks ≈ 2秒
@@ -301,28 +300,28 @@ class AudioProcessor(threading.Thread):
                         
         except Exception as e:
             error_msg = str(e)
-            print(f"❌ 音声処理エラー: {error_msg}")
+            print(f"音声処理エラー: {error_msg}")
             
             # エラーの種類に応じた対処法を提示
             if "Invalid device" in error_msg or "PaErrorCode -9996" in error_msg:
-                print("💡 対処法:")
+                print("対処法:")
                 print("  1. デバイスが接続されているか確認してください")
                 print("  2. デバイスが他のアプリで使用されていないか確認してください")
                 print("  3. Windowsの音声設定でデバイスが有効になっているか確認してください")
                 print("  4. デバイスドライバーを再インストールしてみてください")
             elif "Permission" in error_msg or "Access" in error_msg:
-                print("💡 対処法:")
+                print("対処法:")
                 print("  1. Windowsプライバシー設定でマイクアクセスを許可してください")
                 print("  2. 管理者権限でBlenderを実行してみてください")
             
             self.result_queue.put({"error": error_msg, "suggestions": "デバイス接続とアクセス権限を確認してください"})
         
-        print("🛑 音声処理スレッド終了")
+        print("音声処理スレッド終了")
     
     def process_audio_chunks(self, audio_chunks):
         """音声チャンクを認識処理"""
         try:
-            print("🎤 音声データ処理開始...", end="", flush=True)
+            print("音声データ処理開始...", end="", flush=True)
             
             # チャンクを結合
             audio = np.concatenate(audio_chunks, axis=0).flatten()
@@ -340,7 +339,7 @@ class AudioProcessor(threading.Thread):
                     
                     # 選択された言語設定を取得
                     language_setting = get_whisper_language_setting()
-                    print(f"🌐 使用言語: {language_setting}")
+                    print(f"使用言語: {language_setting}")
                     
                     segments, info = model.transcribe(
                         audio,
@@ -361,7 +360,7 @@ class AudioProcessor(threading.Thread):
                 
                 # 結果をキューに送信
                 if text:
-                    print(f" ✅ 認識結果: {text}")
+                    print(f"認識結果: {text}")
                     self.result_queue.put({
                         "text": text,
                         "timestamp": time.time(),
@@ -373,8 +372,8 @@ class AudioProcessor(threading.Thread):
                 print(" [プロパティ取得エラー]")
         
         except Exception as e:
-            print(f" ❌ 音声認識エラー: {e}")
-            print(f"❌ 音声認識エラー: {e}")
+            print(f"音声認識エラー: {e}")
+            print(f"音声認識エラー: {e}")
     
     def stop(self):
         """スレッドの停止"""
@@ -397,7 +396,7 @@ def check_viewmode(arg_checktype:str) -> bool:
 def check_audio_devices():
     """利用可能な音声デバイスをチェックして適切なデバイスを選択"""
     try:
-        print("🎙️ 利用可能な音声デバイス:")
+        print("利用可能な音声デバイス:")
         devices = sd.query_devices()
         
         input_devices = []
@@ -414,7 +413,7 @@ def check_audio_devices():
                     mic_devices.append(i)
         
         if not input_devices:
-            print("❌ 音声入力デバイスが見つかりません")
+            print("音声入力デバイスが見つかりません")
             return None
         
         # ユーザーが選択したデバイスを優先的に使用
@@ -425,20 +424,20 @@ def check_audio_devices():
                 
                 # "未選択"でない場合、選択されたデバイス名に対応するIDを探す
                 if selected_device_name != "未選択":
-                    print(f"🔍 選択されたデバイスを検索中: {selected_device_name}")
+                    print(f"選択されたデバイスを検索中: {selected_device_name}")
                     
                     for i, device in enumerate(devices):
                         if device['name'] == selected_device_name and i in input_devices:
-                            print(f"✅ 選択されたデバイスが見つかりました: {selected_device_name} (ID: {i})")
+                            print(f"選択されたデバイスが見つかりました: {selected_device_name} (ID: {i})")
                             # デバイスをテストしてから返す
                             if test_audio_device(i):
                                 return i
                             else:
-                                print(f"⚠️ 選択されたデバイス {i} はテストに失敗しました")
+                                print(f"選択されたデバイス {i} はテストに失敗しました")
                     
-                    print(f"⚠️ 選択されたデバイス '{selected_device_name}' が見つからないか利用できないため、自動選択に切り替えます")
+                    print(f"選択されたデバイス '{selected_device_name}' が見つからないか利用できないため、自動選択に切り替えます")
         except Exception as e:
-            print(f"⚠️ 選択デバイス確認エラー: {e}")
+            print(f"選択デバイス確認エラー: {e}")
         
         # デフォルトの入力デバイスを試す
         try:
@@ -452,44 +451,44 @@ def check_audio_devices():
                     break
             
             if default_id is not None and default_id in input_devices:
-                print(f"✅ デフォルト入力デバイス: {default_device['name']} (ID: {default_id})")
+                print(f"デフォルト入力デバイス: {default_device['name']} (ID: {default_id})")
                 # デフォルトデバイスもテストしてから返す
                 if test_audio_device(default_id):
                     return default_id
                 else:
-                    print(f"⚠️ デフォルトデバイス {default_id} はテストに失敗しました")
+                    print(f"デフォルトデバイス {default_id} はテストに失敗しました")
         except Exception as e:
-            print(f"⚠️ デフォルトデバイス確認エラー: {e}")
+            print(f"デフォルトデバイス確認エラー: {e}")
         
         # マイクデバイスがあれば優先的に使用
         if mic_devices:
             for selected_device in mic_devices:
-                print(f"🧪 マイクデバイスをテスト中: デバイス {selected_device}")
+                print(f"マイクデバイスをテスト中: デバイス {selected_device}")
                 if test_audio_device(selected_device):
-                    print(f"🎤 マイクデバイスを選択: デバイス {selected_device}")
+                    print(f"マイクデバイスを選択: デバイス {selected_device}")
                     return selected_device
                 else:
-                    print(f"⚠️ マイクデバイス {selected_device} はテストに失敗しました")
+                    print(f"マイクデバイス {selected_device} はテストに失敗しました")
         
         # その他の入力デバイスから選択（ステレオミキサーを避ける）
         for device_id in input_devices:
             device_name = devices[device_id]['name'].lower()
             if 'stereo' not in device_name and 'ステレオ' not in device_name and 'mix' not in device_name:
-                print(f"🧪 入力デバイスをテスト中: デバイス {device_id}")
+                print(f"入力デバイスをテスト中: デバイス {device_id}")
                 if test_audio_device(device_id):
-                    print(f"🔊 入力デバイスを選択: デバイス {device_id}")
+                    print(f"入力デバイスを選択: デバイス {device_id}")
                     return device_id
                 else:
-                    print(f"⚠️ 入力デバイス {device_id} はテストに失敗しました")
+                    print(f"入力デバイス {device_id} はテストに失敗しました")
         
         # 最後の手段として最初のデバイスを試す（テスト無し）
         if input_devices:
             selected_device = input_devices[0]
-            print(f"⚠️ フォールバック: デバイス {selected_device} を使用します（テスト無し）")
+            print(f"フォールバック: デバイス {selected_device} を使用します（テスト無し）")
             return selected_device
             
     except Exception as e:
-        print(f"❌ デバイスチェックエラー: {e}")
+        print(f"デバイスチェックエラー: {e}")
         return None
     
 ########################################
@@ -498,7 +497,7 @@ def check_audio_devices():
 def test_audio_device(device_id):
     """選択されたデバイスでテスト録音を実行"""
     try:
-        print(f"🧪 デバイス {device_id} をテスト中...")
+        print(f"デバイス {device_id} をテスト中...")
         test_queue = queue.Queue()
         
         def test_callback(indata, frames, time, status):
@@ -516,21 +515,21 @@ def test_audio_device(device_id):
         
         # テストデータがあるかチェック
         if not test_queue.empty():
-            print("✅ デバイステスト成功")
+            print("デバイステスト成功")
             return True
         else:
-            print("⚠️ デバイステスト: データが取得できませんでした")
+            print("デバイステスト: データが取得できませんでした")
             return False
             
     except Exception as e:
-        print(f"❌ デバイステストエラー: {e}")
+        print(f"デバイステストエラー: {e}")
         return False
 
 
 def callback(indata, frames, time, status):
     if status:
         print("Status:", status)
-    print("📦 音声データ:", indata.shape)
+    print("音声データ:", indata.shape)
     q.put(indata.copy())
 
 def recognize_from_queue():
@@ -544,7 +543,7 @@ def recognize_from_queue():
         return None
         
     if model is None:
-        print("⚠️ 音声認識モデルが利用できません")
+        print("音声認識モデルが利用できません")
         return "音声認識テスト"
     
     try:
@@ -656,7 +655,7 @@ def get_selected_languages_array():
         return selected_languages
         
     except Exception as e:
-        print(f"❌ 言語選択状態取得エラー: {e}")
+        print(f"言語選択状態取得エラー: {e}")
         return []
 
 def get_active_language_codes():
@@ -676,7 +675,7 @@ def get_active_language_codes():
         return active_codes
         
     except Exception as e:
-        print(f"❌ アクティブ言語コード取得エラー: {e}")
+        print(f"アクティブ言語コード取得エラー: {e}")
         return ['ja']
 
 def get_whisper_language_setting():
@@ -690,7 +689,7 @@ def get_whisper_language_setting():
         
         # 複数言語の場合は自動検出を使用（Whisperは単一言語のみサポート）
         elif len(active_codes) > 1:
-            print(f"⚠️ 複数言語選択中 {active_codes} - 自動検出を使用")
+            print(f"複数言語選択中 {active_codes} - 自動検出を使用")
             return None  # 自動検出
         
         # 何も選択されていない場合
@@ -698,7 +697,7 @@ def get_whisper_language_setting():
             return None  # 自動検出
             
     except Exception as e:
-        print(f"❌ Whisper言語設定取得エラー: {e}")
+        print(f"Whisper言語設定取得エラー: {e}")
         return None  # 自動検出
 
 ######################################
@@ -941,17 +940,17 @@ class PyWhisperCppStreamingManager:
             # ストリーミングオブジェクトの作成
             self.streaming = pwcpp.StreamingWhisper(self.model)
             
-            print(f"✅ pywhispercpp モデル初期化成功: {model_path}")
+            print(f"pywhispercpp モデル初期化成功: {model_path}")
             return True
             
         except Exception as e:
-            print(f"❌ pywhispercpp モデル初期化失敗: {e}")
+            print(f"pywhispercpp モデル初期化失敗: {e}")
             return False
     
     def audio_callback(self, indata, frames, time, status):
         """音声入力コールバック"""
         if status:
-            print(f"⚠️ 音声入力エラー: {status}")
+            print(f"音声入力エラー: {status}")
         
         # float32をint16に変換（pywhispercppが期待する形式）
         audio_data = (indata.flatten() * 32767).astype(np.int16)
@@ -962,7 +961,7 @@ class PyWhisperCppStreamingManager:
     
     def streaming_worker(self):
         """ストリーミング処理ワーカー"""
-        print("🎤 ストリーミング処理開始")
+        print("ストリーミング処理開始")
         
         while self.is_running:
             try:
@@ -980,24 +979,24 @@ class PyWhisperCppStreamingManager:
                             "timestamp": time.time(),
                             "is_final": True  # pywhispercppでは基本的に最終結果
                         })
-                        print(f"\n🎯 認識結果: {result}")
+                        print(f"\n認識結果: {result}")
                 
             except queue.Empty:
                 continue
             except Exception as e:
-                print(f"❌ ストリーミング処理エラー: {e}")
+                print(f"ストリーミング処理エラー: {e}")
                 break
         
-        print("🛑 ストリーミング処理終了")
+        print("ストリーミング処理終了")
     
     def start_streaming(self, device_id=None):
         """ストリーミング開始"""
         if self.is_running:
-            print("⚠️ ストリーミングは既に実行中です")
+            print("ストリーミングは既に実行中です")
             return False
         
         if not self.model or not self.streaming:
-            print("❌ モデルが初期化されていません")
+            print("モデルが初期化されていません")
             return False
         
         try:
@@ -1019,11 +1018,11 @@ class PyWhisperCppStreamingManager:
             self.stream_thread.daemon = True
             self.stream_thread.start()
             
-            print("✅ pywhispercpp ストリーミング開始")
+            print("pywhispercpp ストリーミング開始")
             return True
             
         except Exception as e:
-            print(f"❌ ストリーミング開始エラー: {e}")
+            print(f"ストリーミング開始エラー: {e}")
             return False
     
     def stop_streaming(self):
@@ -1049,7 +1048,7 @@ class PyWhisperCppStreamingManager:
             except queue.Empty:
                 break
         
-        print("🛑 pywhispercpp ストリーミング停止")
+        print("pywhispercpp ストリーミング停止")
     
     def get_latest_result(self):
         """最新の認識結果を取得"""
@@ -1084,7 +1083,7 @@ class AdvancedPyWhisperCppStreaming(PyWhisperCppStreamingManager):
     
     def streaming_worker_with_vad(self):
         """VAD付きストリーミング処理"""
-        print("🎤 VAD付きストリーミング処理開始")
+        print("VAD付きストリーミング処理開始")
         
         while self.is_running:
             try:
@@ -1115,7 +1114,7 @@ class AdvancedPyWhisperCppStreaming(PyWhisperCppStreamingManager):
                                     "is_final": True,
                                     "duration": len(audio_array) / self.sample_rate
                                 })
-                                print(f"🎯 VAD認識結果: {result}")
+                                print(f"VAD認識結果: {result}")
                     
                     # バッファをクリア
                     self.audio_buffer = []
@@ -1123,10 +1122,10 @@ class AdvancedPyWhisperCppStreaming(PyWhisperCppStreamingManager):
             except queue.Empty:
                 continue
             except Exception as e:
-                print(f"❌ VADストリーミング処理エラー: {e}")
+                print(f"VADストリーミング処理エラー: {e}")
                 break
         
-        print("🛑 VADストリーミング処理終了")
+        print("VADストリーミング処理終了")
     
     def start_streaming_with_vad(self, device_id=None):
         """VAD付きストリーミング開始"""
@@ -1139,7 +1138,7 @@ class AdvancedPyWhisperCppStreaming(PyWhisperCppStreamingManager):
             self.stream_thread.daemon = True
             self.stream_thread.start()
             
-            print("✅ VAD付きストリーミング開始")
+            print("VAD付きストリーミング開始")
             return True
         return False
 
